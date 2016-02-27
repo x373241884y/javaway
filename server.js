@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var fs = require('fs'),
     path = require('path'),
     http = require('http');
@@ -34,13 +35,16 @@ function main(argv) {
         argstr = " " + argstr + " ";
         if (/\s-h\s/.test(argstr)) {
             console.log("use case:");
-            console.log("         node server.js -p8080");
+            console.log("         node server.js -p8080 -r /home/toor/webapp");
             return;
         }
-        if (/\s-p\s?\d{1,5}\s/.test(argstr)) {
-            defaults.port = argstr.replace(/\s+-p(\d+)/, "$1");
+        if (/\s-p\s*\d{1,5}\s/.test(argstr)) {
+            defaults.port = argstr.replace(/\s+-p\s*(\d+)/, "$1");
         }
-    }
+		if(/\s-r\s+.+\s/.test(argstr)){
+			defaults.root = argstr.replace(/\s+-r\s+(.+)\s/,"$1");
+		}
+	}
 
     root = defaults.root, port = defaults.port;
     var server = http.createServer(function (request, response) {
@@ -66,6 +70,7 @@ function main(argv) {
     //    });
     //});
     console.log("start server in http://127.0.0.1:" + port);
+    console.log("working in path ==> " + defaults.root);
 }
 
 function parseURL(root, request) { //   /foo/??bar.js,baz.js
